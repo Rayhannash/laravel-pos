@@ -17,7 +17,7 @@
                 <ul class="navbar-nav">
                     <li class="nav-item"><a class="nav-link" href="{{ route('products.index') }}">Daftar Produk</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('transactions.index') }}">Transaksi</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#">Laporan Penjualan</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ route('reports.index') }}">Laporan Penjualan</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('members.index') }}">Anggota Member</a></li>
                 </ul>
             </div>

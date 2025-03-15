@@ -11,7 +11,7 @@
         <h2>Riwayat Transaksi</h2>
         
         <a href="{{ route('transactions.create') }}" class="btn btn-primary">Buat Transaksi</a>
-        <a href="{{ route('dashboard.index') }}" class="btn btn-primary">Kembali</a>
+        <a href="{{ route('dashboard.index') }}" class="btn btn-secondary">Kembali</a>
         
         <div class="table-responsive mt-3">
             <table class="table table-striped">

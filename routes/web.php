@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ReportController;
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
@@ -32,11 +33,14 @@ Route::put('/members/{member}', [MemberController::class, 'update'])->name('memb
 Route::delete('/members/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
 Route::get('/members/search', function (Request $request) {
     $query = $request->get('query');
-    return Member::where('nomor_hp', 'like', "%{$query}%")->pluck('nomor_hp');
+    return Member::where('nomor_handphone', 'like', "%{$query}%")->pluck('nomor_handphone');
 });
 
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::get('/laporan', [ReportController::class, 'index'])->name('reports.index');
+Route::post('/laporan', [ReportController::class, 'filter'])->name('reports.filter');
 
 

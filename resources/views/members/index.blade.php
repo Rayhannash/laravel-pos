@@ -10,7 +10,7 @@
     <div class="container mt-4">
         <h2>Daftar Member</h2>
         <a href="{{ route('members.create') }}" class="btn btn-primary">Tambah Member</a>
-        <a href="{{ route('dashboard.index') }}" class="btn btn-primary">Kembali</a>
+        <a href="{{ route('dashboard.index') }}" class="btn btn-secondary">Kembali</a>
         <div class="table-responsive">
             <table class="table table-striped mt-3">
                 <thead>
