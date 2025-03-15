@@ -47,7 +47,7 @@ class TransactionController extends Controller
                 }
             }
 
-            $nomor_transaksi = 'TRX-' . time();
+            $nomor_transaksi = 'TRX-' . date('Ymd') . '-' . mt_rand(10000, 99999);
             $totalHarga = $request->total_harga;
             $diskon = $request->member_id ? 0.05 * $totalHarga : 0;
             $totalHargaSetelahDiskon = $totalHarga - $diskon;
@@ -64,6 +64,7 @@ class TransactionController extends Controller
             ]);
 
             \Log::info('Data produk yang diterima:', $request->products);
+            
             foreach ($request->products as $product) {
                 $productModel = Product::findOrFail($product['id']);
                 $productModel->stok -= $product['quantity'];
@@ -98,8 +99,14 @@ class TransactionController extends Controller
         }
     }
 
-    public function show(Transaction $transaction)
+    public function show($id)
     {
+        $transaction = Transaction::with('member')->find($id);
+        
+        if (!$transaction) {
+            return redirect()->route('transactions.index')->with('error', 'Transaksi tidak ditemukan');
+        }
+
         return view('transactions.show', compact('transaction'));
     }
 }

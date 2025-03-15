@@ -15,10 +15,12 @@
                 <label for="nama_member" class="form-label">Nama Member</label>
                 <input type="text" class="form-control" id="nama_member" name="nama_member" required>
             </div>
+
             <div class="mb-3">
                 <label for="nomor_handphone" class="form-label">Nomor Handphone</label>
                 <input type="number" class="form-control" id="nomor_handphone" name="nomor_handphone" required>
             </div>
+            
             <button type="submit" class="btn btn-primary">Simpan</button>
         </form>
     </div>

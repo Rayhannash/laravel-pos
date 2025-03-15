@@ -24,6 +24,11 @@
             </div>
 
             <div class="mb-3">
+                <label for="satuan" class="form-label">Satuan</label>
+                <input type="text" class="form-control" id="satuan" name="satuan" value="{{ $product->satuan }}" required>
+            </div>
+
+            <div class="mb-3">
                 <label for="harga" class="form-label">Harga</label>
                 <input type="number" class="form-control" id="harga" name="harga" value="{{ $product->harga }}" required>
             </div>

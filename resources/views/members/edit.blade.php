@@ -22,7 +22,7 @@
                 <label for="nomor_handphone" class="form-label">Nomor Handphone</label>
                 <input type="number" class="form-control" id="nomor_handphone" name="nomor_handphone" value="{{ $member->nomor_handphone }}" required>
             </div>
-
+            
             <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
             <a href="{{ route('members.index') }}" class="btn btn-secondary">Batal</a>
         </form>

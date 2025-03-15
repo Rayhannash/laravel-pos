@@ -19,7 +19,7 @@
                     <label class="form-label">Produk</label>
                     <select name="products[0][id]" class="form-control product-select" required>
                         @foreach ($products as $product)
-                        <option value="{{ $product->id }}">
+                        <option value="{{ $product->id }}" data-price="{{ $product->harga }}" data-stock="{{ $product->stok }}">
                             {{ $product->nama_produk }} - Rp {{ number_format($product->harga, 2) }}
                         </option>
                         @endforeach
@@ -36,11 +36,11 @@
             </div>
 
             <div class="mb-3">
-                <label for="member_id" class="form-label">Member (Opsional)</label>
-                <select class="form-control" id="member_id" name="member_id">
+                <label for="member_id">Member (Opsional)</label>
+                <select name="member_id" id="member_id" class="form-control">
                     <option value="">Pilih Member (Opsional)</option>
                     @foreach ($members as $member)
-                        <option value="{{ $member->id }}">{{ $member->nama }} - {{ $member->nomor_telepon }}</option>
+                        <option value="{{ $member->id }}">{{ $member->nama_member }}</option>
                     @endforeach
                 </select>
             </div>
@@ -61,89 +61,78 @@
             </div>
 
             <button type="submit" class="btn btn-primary">Simpan Transaksi</button>
-            <a href="{{ route('dashboard.index') }}" class="btn btn-primary">Kembali</a>
+            <a href="{{ route('transactions.index') }}" class="btn btn-primary">Kembali</a>
         </form>
     </div>
 
     <script>
         $(document).ready(function() {
-            let productIndex = 1;
+            let productIndex = 1; // Menyimpan indeks produk yang ditambahkan
 
+            // Event klik tombol tambah produk
             $("#add-product").click(function() {
                 let newProduct = `
-    <div class="product-item mb-3">
-        <label class="form-label">Produk</label>
-        <select name="products[${productIndex}][id]" class="form-control product-select" required>
-            @foreach ($products as $product)
-                @if ($product->stok > 0)
-                    <option value="{{ $product->id }}" data-price="{{ $product->harga }}" data-stock="{{ $product->stok }}">
-                        {{ $product->nama_produk }} - Rp {{ number_format($product->harga, 2) }}
-                    </option>
-                @else
-                    <option disabled>
-                        {{ $product->nama_produk }} - Stok Habis
-                    </option>
-                @endif
-            @endforeach
-        </select>
-        <label class="form-label">Jumlah</label>
-        <input type="number" name="products[${productIndex}][quantity]" class="form-control quantity-input" min="1" required>
-    </div>`;
-
+                <div class="product-item mb-3">
+                    <label class="form-label">Produk</label>
+                    <select name="products[${productIndex}][id]" class="form-control product-select" required>
+                        @foreach ($products as $product)
+                            @if ($product->stok > 0)
+                                <option value="{{ $product->id }}" data-price="{{ $product->harga }}" data-stock="{{ $product->stok }}">
+                                    {{ $product->nama_produk }} - Rp {{ number_format($product->harga, 2) }}
+                                </option>
+                            @else
+                                <option disabled>
+                                    {{ $product->nama_produk }} - Stok Habis
+                                </option>
+                            @endif
+                        @endforeach
+                    </select>
+                    <label class="form-label">Jumlah</label>
+                    <input type="number" name="products[${productIndex}][quantity]" class="form-control quantity-input" min="1" required>
+                </div>`;
                 $("#product-list").append(newProduct);
                 productIndex++;
             });
 
-            $(document).on('change', '.product-select, .quantity-input', function() {
-                let totalHarga = 0;
+            // Fungsi untuk memperbarui total harga
+            function updateTotalHarga() {
+                let total = 0;
                 $(".product-item").each(function() {
-                    let price = $(this).find(".product-select option:selected").data("price");
-                    let quantity = $(this).find(".quantity-input").val();
-                    totalHarga += (price * quantity) || 0;
+                    let selectedOption = $(this).find(".product-select option:selected");
+                    let price = parseFloat(selectedOption.data("price")) || 0;
+                    let quantity = parseInt($(this).find(".quantity-input").val()) || 0;
+                    total += price * quantity;
                 });
-                $("#total_harga").val(totalHarga);
+                $("#total_harga").val(total.toFixed(2));
+                updateTotalHargaSetelahDiskon();
+            }
 
-                let memberId = $("#member_id").val();
-                let diskon = memberId ? 0.05 * totalHarga : 0;
-                let totalSetelahDiskon = totalHarga - diskon;
-                $("#total_harga_diskon").val(totalSetelahDiskon);
+            // Fungsi untuk menghitung total harga setelah diskon
+            function updateTotalHargaSetelahDiskon() {
+                let total = parseFloat($("#total_harga").val()) || 0;
+                let member = $("#member_id").val();
+                let diskon = member ? 0.05 * total : 0;
+                $("#total_harga_diskon").val((total - diskon).toFixed(2));
+            }
+
+            // Event perubahan produk dan jumlah
+            $(document).on("change", ".product-select, .quantity-input", function() {
+                updateTotalHarga();
             });
 
-            $("#member_id").on("input", function() {
-                $(".product-select, .quantity-input").trigger("change");
+            // Event perubahan pilihan member
+            $("#member_id").on("change", function() {
+                updateTotalHargaSetelahDiskon();
             });
 
+            // Event input untuk menghitung kembalian
             $("#total_bayar").on("input", function() {
                 let totalBayar = parseFloat($(this).val()) || 0;
                 let totalHargaDiskon = parseFloat($("#total_harga_diskon").val()) || parseFloat($("#total_harga").val());
                 let kembalian = totalBayar - totalHargaDiskon;
                 $("#kembalian").val(kembalian);
             });
-
-            $(document).on('input', '.quantity-input', function() {
-                let selectedOption = $(this).closest('.product-item').find('.product-select option:selected');
-                let stock = selectedOption.data('stock');
-                let quantity = parseInt($(this).val());
-
-                if (quantity > stock) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Stok Tidak Cukup!',
-                        text: 'Jumlah yang dimasukkan melebihi stok yang tersedia.',
-                    });
-                    $(this).val(stock);
-                }
-            });
         });
     </script>
-    @if (session('error'))
-    <script>
-        Swal.fire({
-            icon: 'error',
-            title: 'Gagal!',
-            text: "{{ session('error') }}",
-        });
-    </script>
-    @endif
 </body>
 </html>

@@ -9,10 +9,12 @@
 <body>
     <div class="container mt-4">
         <h2>Riwayat Transaksi</h2>
+        
         <a href="{{ route('transactions.create') }}" class="btn btn-primary">Buat Transaksi</a>
         <a href="{{ route('dashboard.index') }}" class="btn btn-primary">Kembali</a>
-        <div class="table-responsive">
-            <table class="table table-striped mt-3">
+        
+        <div class="table-responsive mt-3">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th>No. Transaksi</th>
@@ -26,25 +28,26 @@
                 </thead>
                 <tbody>
                     @foreach ($transactions as $transaction)
-                    <tr>
-                        <td>{{ $transaction->nomor_transaksi }}</td>
-                        <td>{{ $transaction->tanggal_transaksi }}</td>
-                        <td>{{ $transaction->member_id ?? 'Umum' }}</td>
-                        <td>Rp {{ number_format($transaction->total_harga, 2) }}</td>
-                        <td>Rp {{ number_format($transaction->total_bayar, 2) }}</td>
-                        <td>Rp {{ number_format($transaction->kembalian, 2) }}</td>
-                        <td>
-                        <a href="{{ route('transactions.show', $transaction->id) }}" class="btn btn-info btn-sm">Detail</a>
-                            <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah yakin untuk menghapus?')">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td>{{ $transaction->nomor_transaksi }}</td>
+                            <td>{{ $transaction->tanggal_transaksi }}</td>
+                            <td>{{ $transaction->member_id ?? 'Umum' }}</td>
+                            <td>Rp {{ number_format($transaction->total_harga, 2) }}</td>
+                            <td>Rp {{ number_format($transaction->total_bayar, 2) }}</td>
+                            <td>Rp {{ number_format($transaction->kembalian, 2) }}</td>
+                            <td>
+                                <a href="{{ route('transactions.show', $transaction->id) }}" class="btn btn-info btn-sm">Detail</a>
+                                <form action="{{ route('transactions.destroy', $transaction->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah yakin untuk menghapus?')">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
                     @endforeach
                 </tbody>
             </table>
         </div>
+    </div>
 </body>
 </html>

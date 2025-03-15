@@ -9,13 +9,14 @@ use App\Http\Controllers\MemberController;
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 Route::get('/products/{product}/edit', [ProductController::class, 'edit'])->name('products.edit');
 Route::put('/products/{product}', [ProductController::class, 'update'])->name('products.update');
 Route::delete('/products/{product}', [ProductController::class, 'destroy'])->name('products.destroy');
+Route::put('/products/restore/{id}', [ProductController::class, 'restore'])->name('products.restore');
+Route::put('/products/restore-all', [ProductController::class, 'restoreAll'])->name('products.restoreAll');
 
 Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions.index');
 Route::get('/transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
